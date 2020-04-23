@@ -81,6 +81,7 @@ Main proc
 	mov ax, @data
 	mov ds, ax ; инициализация ds
 	  
+start:
 	; выводим сообщение о вводе имени файла
 	mov ah,09h 
     mov dx,offset msgEnterFile
@@ -131,6 +132,8 @@ Main proc
 	mov al, saveMode
 	int 10h
 	
+	jmp start
+	
 	jmp exitprog
 	
 errorFileOpen:	
@@ -174,6 +177,9 @@ read:
     mov ah,01h  ; считываем символ
     int 21h 
 	
+	cmp al, 27 ; esc?
+	je ex1t
+	
     cmp al, 13 ; символ возврата?             
     je done 
 	
@@ -191,6 +197,9 @@ done:
 	lea dx, filename ; в dx смещение имени файла
     ret  
 	
+ex1t:
+	mov ax,4C00h ; выход из программы
+	int 21h
 GetFilename endp
 
 
