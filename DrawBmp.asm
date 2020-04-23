@@ -10,6 +10,7 @@
 .data  
  ; сообщения для вывода на экран
 msgEnterFile db 'Enter filename:',10,13,'$'
+msgExitButton db 'Press ESC to exit the program',10,13,'$'
 errorOpenFile db 'Open file error',10,13,'$'
 errorFileType db 'This is not BMP file',10,13,'$'
 errorFileResolution db 'File can''t be more than 320x200',10,13,'$'
@@ -82,6 +83,11 @@ Main proc
 	mov ds, ax ; инициализация ds
 	  
 start:
+
+	; выводим сообщение о возможности выхода при нажатии ESC
+	mov ah,09h 
+    mov dx,offset msgExitButton
+    int 21h
 	; выводим сообщение о вводе имени файла
 	mov ah,09h 
     mov dx,offset msgEnterFile
@@ -141,28 +147,28 @@ errorFileOpen:
     mov ah,09h 
     mov dx,offset errorOpenFile
     int 21h
-	jmp exitprog
+	jmp start
 	
 errorFileNotBmp:	
 	; выводим сообщение о том, что файл не BMP
     mov ah,09h 
     mov dx,offset errorFileType
     int 21h
-	jmp exitprog
+	jmp start
 	
 errorWrongResolution:	
 	; выводим сообщение о том, что разрешение файла больше чем 320*200
     mov ah,09h 
     mov dx,offset errorFileResolution
     int 21h
-	jmp exitprog
+	jmp start
 	
 errorNotMono:
 	; выводим сообщение о том, что файл не монохромный
     mov ah,09h 
     mov dx,offset errorNotMonochrome
     int 21h
-	jmp exitprog
+	jmp start
 	
 exitprog:
 	mov ax,4C00h ; выход из программы
